@@ -1,1 +1,39 @@
-<p>signup-form works!</p>
+<mat-card>
+  <mat-card-title>Sign Up</mat-card-title>
+  <mat-card-content>
+    <form (ngSubmit)="submitForm()" #signupForm="ngForm">
+      <mat-form-field>
+        <input matInput placeholder="First Name" required [(ngModel)]="firstName" name="firstName" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Last Name" required [(ngModel)]="lastName" name="lastName" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Email" required [(ngModel)]="email" name="email" email />
+        <mat-error *ngIf="signupForm.controls['email'].hasError('email')">
+          Invalid email address
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Password" type="password" required [(ngModel)]="password" name="password" />
+        <mat-error *ngIf="signupForm.controls['password'].hasError('minlength')">
+          Password should be at least 8 characters long
+        </mat-error>
+        <mat-error *ngIf="passwordContainsName()">
+          Password should not contain first or last name
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit">
+        Sign Up
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<div *ngIf="firstName && lastName">
+  <h2>Welcome, {{ fullName }}!</h2>
+</div>
