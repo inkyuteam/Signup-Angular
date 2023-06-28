@@ -68,12 +68,12 @@ export class SignupFormComponent {
   makeFirstRequest(lastNameLength: number): void {
     const url = `https://jsonplaceholder.typicode.com/photos/${lastNameLength}`;
 
-    this.http.get<any>(url).subscribe(data => {
-      const thumbnailUrl = data.thumbnailUrl;
-      this.makeSecondRequest(thumbnailUrl);
-    }, error => {
-      console.log('Error:', error);
-    });
+    this.http.get<any>(url).pipe(
+      tap((data: any) => {
+        const thumbnailUrl = data.thumbnailUrl;        
+        this.makeSecondRequest(thumbnailUrl);
+      })
+    ).subscribe();
   }
 
   makeSecondRequest(thumbnailUrl: string): void {
@@ -85,11 +85,11 @@ export class SignupFormComponent {
     };
 
     const url = 'https://jsonplaceholder.typicode.com/users';
-    this.http.post<any>(url, requestBody).subscribe(response => {
-      console.log('Second request response:', response);
-    }, error => {
-      console.log('Error:', error);
-    });
+    this.http.post<any>(url, requestBody).pipe(
+      tap((response: any) => {
+        console.log('Second request response: ', response);
+      })
+    ).subscribe();
   }
 
   passwordContainsName(): boolean {
