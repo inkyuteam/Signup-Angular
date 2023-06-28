@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { SignupFormComponent } from './signup-form/signup-form.component';
+import { SignupFormComponent } from './components/signup-form/signup-form.component';
 
 import { FormsModule } from '@angular/forms';
 // Import Angular Material modules
@@ -11,6 +11,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -25,6 +28,7 @@ import { MatCardModule } from '@angular/material/card';
     MatFormFieldModule,
     MatButtonModule,
     MatCardModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,0 +1,52 @@
+<div *ngIf="firstName && lastName" class="welcome-logo">
+  <h2>Welcome,<br> "{{ fullName }}"!</h2>
+</div>
+
+<mat-card>
+  <mat-card-title>Sign Up</mat-card-title>
+  <mat-card-content>
+    <form (ngSubmit)="submitForm(signupForm)" #signupForm="ngForm">
+      <mat-form-field>
+        <input matInput placeholder="First Name" required [(ngModel)]="firstName" name="firstName" />
+        <mat-error *ngIf="signupForm.controls['firstName']?.hasError('required')">
+          {{ errorMessages?.firstNameRequired }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Last Name" required [(ngModel)]="lastName" name="lastName" />
+        <mat-error *ngIf="signupForm.controls['lastName']?.hasError('required')">
+          {{ errorMessages?.lastNameRequired }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Email" required [(ngModel)]="email" name="email" email />
+        <mat-error *ngIf="signupForm.controls['email']?.hasError('required')">
+          {{ errorMessages?.emailRequired }}
+        </mat-error>
+        <mat-error *ngIf="signupForm.controls['email']?.hasError('email')">
+          {{ errorMessages?.emailInvalid }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Password" type="password" required [(ngModel)]="password" name="password"
+          minlength="8" />
+        <mat-error *ngIf="signupForm.controls['password']?.hasError('required')">
+          {{ errorMessages?.passwordRequired }}
+        </mat-error>
+        <mat-error *ngIf="signupForm.controls['password']?.hasError('minlength')">
+          {{ errorMessages?.passwordMinLength }}
+        </mat-error>
+        <mat-error *ngIf="passwordContainsName()">
+          {{ errorMessages?.passwordNameConstraint }}
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" class="signup-button">
+        Sign Up
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>
