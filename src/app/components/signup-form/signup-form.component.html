@@ -32,14 +32,15 @@
 
       <mat-form-field>
         <input matInput placeholder="Password" type="password" required [(ngModel)]="password" name="password"
-          minlength="8" />
+          minlength="8" [pattern]="passwordPattern" />
         <mat-error *ngIf="signupForm.controls['password']?.hasError('required')">
           {{ errorMessages?.passwordRequired }}
         </mat-error>
         <mat-error *ngIf="signupForm.controls['password']?.hasError('minlength')">
           {{ errorMessages?.passwordMinLength }}
         </mat-error>
-        <mat-error *ngIf="passwordContainsName()">
+        <mat-error
+          *ngIf="!signupForm.controls['password']?.hasError('minlength') && signupForm.controls['password']?.hasError('pattern')">
           {{ errorMessages?.passwordNameConstraint }}
         </mat-error>
       </mat-form-field>

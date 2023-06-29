@@ -26,6 +26,17 @@ export class SignupFormComponent {
     this.fullName = '';
   }
 
+  get passwordPattern(): RegExp {
+    const escapedFirstName = this.escapeRegExp(this.firstName);
+    const escapedLastName = this.escapeRegExp(this.lastName);
+    const pattern = `^(?!.*(${escapedFirstName}|${escapedLastName}))[a-zA-Z0-9]*$`;
+    return new RegExp(pattern, 'i');
+  }
+
+  private escapeRegExp(text: string): string {
+    return text ? text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : '';
+  }
+
   ngOnInit(): void {
     this.errorMessageService.getErrorMessages().subscribe(
       (errorMessages) => {
@@ -70,7 +81,7 @@ export class SignupFormComponent {
 
     this.http.get<any>(url).pipe(
       tap((data: any) => {
-        const thumbnailUrl = data.thumbnailUrl;        
+        const thumbnailUrl = data.thumbnailUrl;
         this.makeSecondRequest(thumbnailUrl);
       })
     ).subscribe();
@@ -90,21 +101,6 @@ export class SignupFormComponent {
         console.log('Second request response: ', response);
       })
     ).subscribe();
-  }
-
-  passwordContainsName(): boolean {
-    if (!this.password || !this.firstName || !this.lastName) {
-      return false;
-    }
-
-    const lowercasePassword = this.password.toLowerCase();
-    const lowercaseFirstName = this.firstName.toLowerCase();
-    const lowercaseLastName = this.lastName.toLowerCase();
-
-    return (
-      lowercasePassword.includes(lowercaseFirstName) ||
-      lowercasePassword.includes(lowercaseLastName)
-    );
   }
 
   updateFullName(): void {
