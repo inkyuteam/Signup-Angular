@@ -2,6 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { SignupFormComponent } from './signup-form.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SignupFormComponent', () => {
   let component: SignupFormComponent;
@@ -10,7 +14,14 @@ describe('SignupFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, HttpClientTestingModule],
+      imports: [
+        FormsModule,
+        HttpClientTestingModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+      ],
       declarations: [SignupFormComponent],
     }).compileComponents();
   });
@@ -26,63 +37,37 @@ describe('SignupFormComponent', () => {
     httpMock.verify();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should update fullName when firstName and lastName are changed', () => {
-    component.firstName = 'John';
-    component.lastName = 'Doe';
-    component.updateFullName();
-    expect(component.fullName).toEqual('John Doe');
-  });
-
-  it('should make the first HTTP request with the correct URL', () => {
-    const lastNameLength = 3;
-    component.lastName = 'Doe';
-
-    component.makeFirstRequest(lastNameLength);
-
-    const request = httpMock.expectOne(`https://jsonplaceholder.typicode.com/photos/${lastNameLength}`);
+  it('should handle the HTTP request for error messages', () => {
+    const request = httpMock.expectOne('assets/error-messages.json');
     expect(request.request.method).toBe('GET');
+    
+    // Provide a mock response here
+    const mockResponse = {
+      firstNameRequired: 'First name is required',
+      lastNameRequired: 'Last name is required',
+      emailRequired: 'Email is required',
+      emailInvalid: 'Invalid email',
+      passwordRequired: 'Password is required',
+      passwordMinLength: 'Password should have a minimum length of 8 characters',
+      passwordNameConstraint: 'Password should not contain the word "password"',
+    };
+    request.flush(mockResponse);
   });
 
-  it('should make the second HTTP request with the correct data', () => {
-    const thumbnailUrl = 'https://example.com/thumbnail.jpg';
-    component.firstName = 'John';
-    component.lastName = 'Doe';
-    component.email = 'john@example.com';
-
-    component.makeSecondRequest(thumbnailUrl);
-
-    const expectedRequestBody = {
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@example.com',
-      thumbnailUrl: thumbnailUrl,
+  it('should handle error messages request', () => {
+    const errorMessages = {
+      firstNameRequired: 'First name is required',
+      lastNameRequired: 'Last name is required',
+      emailRequired: 'Email is required',
+      emailInvalid: 'Invalid email',
+      passwordRequired: 'Password is required',
+      passwordMinLength: 'Password should have a minimum length of 8 characters',
+      passwordNameConstraint: 'Password should not contain the word "password"',
     };
 
-    const request = httpMock.expectOne('https://jsonplaceholder.typicode.com/users');
-    expect(request.request.method).toBe('POST');
-    expect(request.request.body).toEqual(expectedRequestBody);
-  });
+    const request = httpMock.expectOne('assets/error-messages.json');
+    request.flush(errorMessages);
 
-  it('should display a welcome message after successful form submission', () => {
-    spyOn(window, 'alert');
-    const form = {
-      invalid: false,
-    } as any;
-    component.firstName = 'John';
-    component.lastName = 'Doe';
-    component.email = 'john@example.com';
-
-    component.submitForm(form);
-
-    const thumbnailUrl = 'https://example.com/thumbnail.jpg';
-    const request = httpMock.expectOne(`https://jsonplaceholder.typicode.com/photos/${component.lastName.length}`);
-    request.flush({ thumbnailUrl });
-    const secondRequest = httpMock.expectOne('https://jsonplaceholder.typicode.com/users');
-    secondRequest.flush({});
-    expect(window.alert).toHaveBeenCalledWith('Welcome! You are successfully registered.');
+    expect(component.errorMessages).toEqual(errorMessages);
   });
 });

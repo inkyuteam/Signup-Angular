@@ -99,7 +99,7 @@ export class SignupFormComponent {
     this.http.post<any>(url, requestBody).pipe(
       tap((response: any) => {
         console.log('Second request response: ', response);
-        alert("Welcome! You are succesfully registered.");
+        alert("Welcome! You are successfully registered.");
       })
     ).subscribe();
   }
